@@ -1,7 +1,6 @@
 import React from "react";
+import numbersAndSymbols from "./arrayData"
 
-
-const numbersAndSymbols = ["AC","/","*",7,8,9, "-",4,5,6,"+",1,2,3,  "=",0,"."] 
 let arrayNumber = []
 let arrayNumberAndSigns = [] //este se puede usar en vez del otro, revisar 
 let newArrayStrings = []
@@ -13,14 +12,14 @@ class CalculatorComponent extends React.Component {
       displayNumClicked: "",
       displayNumAndOperations: ""
     }
-    this.handleNumberClick = this.handleNumberClick.bind(this)
+    this.handleElementsClick = this.handleElementsClick.bind(this)
     this.addNumberToArray = this.addNumberToArray.bind(this)
     this.addNumberAndOperationsToArray = this.addNumberAndOperationsToArray.bind(this)
-    this.makeOperation = this.makeOperation.bind(this)
     this.organizeInformation = this.organizeInformation.bind(this)
+    this.makeOperation = this.makeOperation.bind(this)
   }
 
-  handleNumberClick(e){
+  handleElementsClick(e){
 
     let textDisplay = ""
     let event = e.target.innerHTML 
@@ -37,8 +36,9 @@ class CalculatorComponent extends React.Component {
     } else if (event === '='){
       textDisplay = this.makeOperation(newArrayStrings)
       arrayNumber = []
-      arrayNumberAndSigns = [] //este se puede usar en vez del otro, revisar 
+      arrayNumberAndSigns = []
     } else {
+      //aca entra cuando agrego un simbolo
       textDisplay = event
       arrayNumber = []
     }
@@ -49,12 +49,13 @@ class CalculatorComponent extends React.Component {
   }
 
   addNumberToArray(numClicked){
+    //it adds the number I clicked to the array and displays it on the screen into display-number element 
     arrayNumber.push(numClicked)
     return arrayNumber
   }
 
   addNumberAndOperationsToArray(event){
-
+    //in this function i add all clicked numbers and signs to arrayNumberAndSigns array
     if(event !== "AC"){
       arrayNumberAndSigns.push(event)
     } else {
@@ -83,7 +84,6 @@ class CalculatorComponent extends React.Component {
     let newArrayNumbersAndSigns = [newArrayStrings[0]]
 
     for(let counter = 1; counter < newArrayStrings.length; counter++){
-  
       let element = newArrayStrings[counter]
       
       if((element !== newArrayStrings[counter - 1])){
@@ -139,7 +139,7 @@ class CalculatorComponent extends React.Component {
     const {displayNumClicked, displayNumAndOperations} = this.state
 
     const items = numbersAndSymbols.map((element, index) => {
-      return <div key={index} className={`element-${index} element`} onClick={this.handleNumberClick}>{element}</div>
+      return <div key={index} className={`element-${index} element`} onClick={this.handleElementsClick}>{element}</div>
     });
 
     return (
