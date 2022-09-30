@@ -36,6 +36,8 @@ class CalculatorComponent extends React.Component {
       textDisplay = number    
     } else if (event === '='){
       textDisplay = this.makeOperation(newArrayStrings)
+      arrayNumber = []
+      arrayNumberAndSigns = [] //este se puede usar en vez del otro, revisar 
     } else {
       textDisplay = event
       arrayNumber = []
@@ -66,56 +68,57 @@ class CalculatorComponent extends React.Component {
   }
 
   organizeInformation(arrayNumberAndSigns){
-    let operationSign = null
-
     newArrayStrings = [...arrayNumberAndSigns]
-    newArrayStrings = newArrayStrings.join('').split(/\D/)
-
-    if(newArrayStrings.length > 1){
-      let symbol = arrayNumberAndSigns.join('').match(/\D/)
-      operationSign = symbol[0]
-    }
 
     for(let counter = 0; counter < newArrayStrings.length; counter++){
-
-      newArrayStrings[counter] = Number(newArrayStrings[counter])
-
-      if(counter % 2 === 1){
-        //el problema esta aca
-        newArrayStrings[counter + 1] = newArrayStrings[counter]
-        newArrayStrings[counter] = operationSign
+  
+      if((Number(newArrayStrings[counter]) &&  Number(newArrayStrings[counter + 1])) || (newArrayStrings[counter + 1] === '0')){
+        newArrayStrings[counter] = newArrayStrings[counter] + newArrayStrings[counter + 1]
+        newArrayStrings[counter + 1] = newArrayStrings[counter + 2]
       }
     }
-    
   }
 
   makeOperation(newArrayStrings){
-    let result = null
+    let newArrayNumbersAndSigns = [newArrayStrings[0]]
 
-    for(let counter2 = 0; counter2 < newArrayStrings.length; counter2++){
-
-      let element = newArrayStrings[counter2]
-
-      if(element === '+'){
-        let addition = newArrayStrings[counter2 - 1] + newArrayStrings[counter2 + 1]
-        result = addition
-      }
-
-      if(element === '-'){
-        let subtraction = newArrayStrings[counter2 - 1] - newArrayStrings[counter2 + 1]
-        result = subtraction
-      }
-
-      if(element === '*'){
-        let multiplication = newArrayStrings[counter2 - 1] * newArrayStrings[counter2 + 1]
-        result = multiplication
-      } 
-
-      if(element === '/') {
-        let division = newArrayStrings[counter2 - 1] / newArrayStrings[counter2 + 1]
-        result = division
+    for(let counter = 1; counter < newArrayStrings.length; counter++){
+  
+      let element = newArrayStrings[counter]
+      
+      if((element !== newArrayStrings[counter - 1])){
+        newArrayNumbersAndSigns.push(element)
       }
     }
+
+    for(let counter = 0; counter < newArrayNumbersAndSigns.length; counter++){
+  
+      if(counter % 2 === 0){
+        newArrayNumbersAndSigns[counter] = Number(newArrayNumbersAndSigns[counter])
+      }
+    }
+
+    let result = newArrayNumbersAndSigns[0]
+
+    for(let counter2 = 0; counter2 < newArrayNumbersAndSigns.length; counter2++){
+
+      if(counter2 % 2 === 1){
+        
+        if(newArrayNumbersAndSigns[counter2] === '+'){
+          result = result + newArrayNumbersAndSigns[counter2 + 1]
+        }
+        if(newArrayNumbersAndSigns[counter2] === '-'){
+          result = result - newArrayNumbersAndSigns[counter2 + 1]
+        }
+        if(newArrayNumbersAndSigns[counter2] === '*'){
+          result = result * newArrayNumbersAndSigns[counter2 + 1]
+        }
+        if (newArrayNumbersAndSigns[counter2] === '/'){
+          result = result / newArrayNumbersAndSigns[counter2 + 1]
+        }
+      }
+    }
+  
 
     let resultDisplay 
 
@@ -140,11 +143,15 @@ class CalculatorComponent extends React.Component {
     });
 
     return (
+
+    <div className="body-container">
       <div className="calculator-container">
         <div className="display-operation">{displayNumAndOperations}</div>
         <div className="display-number">{displayNumClicked}</div>
         <div className="num-container">{items}</div>
       </div>
+    </div>
+
     );
   }
 }

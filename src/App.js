@@ -1,8 +1,8 @@
-import BodyContainer from './bodyApp';
+import CalculatorComponent from './calculator';
 import './App.css';
 
 function App() {
-  return <BodyContainer />;
+  return <CalculatorComponent />;
 }
 
 export default App;
