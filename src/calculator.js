@@ -1,11 +1,7 @@
 import React from "react";
 import numbersAndSymbols from "./arrayData"
 
-let arrayNumber = []
-let arrayNumberAndSigns = [] //este se puede usar en vez del otro, revisar 
-let newArrayStrings = []
-
-class CalculatorComponent extends React.Component {
+class Calculator extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -13,34 +9,36 @@ class CalculatorComponent extends React.Component {
       displayNumAndOperations: ""
     }
     this.handleElementsClick = this.handleElementsClick.bind(this)
-    this.addNumberToArray = this.addNumberToArray.bind(this)
-    this.addNumberAndOperationsToArray = this.addNumberAndOperationsToArray.bind(this)
-    this.organizeInformation = this.organizeInformation.bind(this)
-    this.makeOperation = this.makeOperation.bind(this)
+    this.arrayNumberAndSigns = [] //este se puede usar en vez del otro, revisar 
+    this.arrayNumber = []
+    this.newArrayStrings = []
   }
 
   handleElementsClick(e){
-
     let textDisplay = ""
-    let event = e.target.innerHTML 
-    this.addNumberAndOperationsToArray(event)
-    
-    if(event === 'AC'){
-      textDisplay = ''
-      arrayNumber = []
-    } else if(Number(event)){
-      let numClicked = Number(event)
-      let number = this.addNumberToArray(numClicked)
-      number = number.join('')
-      textDisplay = number    
-    } else if (event === '='){
-      textDisplay = this.makeOperation(newArrayStrings)
-      arrayNumber = []
-      arrayNumberAndSigns = []
-    } else {
-      //aca entra cuando agrego un simbolo
-      textDisplay = event
-      arrayNumber = []
+    let buttonClicked = e.target.innerHTML 
+    this.addNumberAndOperationsToArray(buttonClicked, this.arrayNumberAndSigns)
+
+    switch(buttonClicked){
+      case 'AC':
+        textDisplay = ''
+        this.arrayNumber = []
+        break;
+      case Number(buttonClicked):
+        let numClicked = Number(buttonClicked)
+        let number = this.addNumberToArray(numClicked, this.arrayNumber)
+        number = number.join('')
+        textDisplay = number
+        break;
+      case '=':
+        textDisplay = this.makeOperation(this.newArrayStrings)
+        this.arrayNumber = []
+        this.arrayNumberAndSigns = []
+        break;
+      default:
+        textDisplay = buttonClicked
+        this.arrayNumber = []
+        break
     }
 
     this.setState({
@@ -48,16 +46,16 @@ class CalculatorComponent extends React.Component {
     })
   }
 
-  addNumberToArray(numClicked){
+  addNumberToArray(numClicked, arrayNumber){
     //it adds the number I clicked to the array and displays it on the screen into display-number element 
     arrayNumber.push(numClicked)
     return arrayNumber
   }
 
-  addNumberAndOperationsToArray(event){
+  addNumberAndOperationsToArray(buttonClicked, arrayNumberAndSigns){
     //in this function i add all clicked numbers and signs to arrayNumberAndSigns array
-    if(event !== "AC"){
-      arrayNumberAndSigns.push(event)
+    if(buttonClicked !== "AC"){
+      arrayNumberAndSigns.push(buttonClicked)
     } else {
       arrayNumberAndSigns = []
     }
@@ -68,14 +66,17 @@ class CalculatorComponent extends React.Component {
     this.organizeInformation(arrayNumberAndSigns)
   }
 
-  organizeInformation(arrayNumberAndSigns){
-    newArrayStrings = [...arrayNumberAndSigns]
+  organizeInformation(arrayNumberAndSigns ){
+    this.newArrayStrings = [...arrayNumberAndSigns]
 
-    for(let counter = 0; counter < newArrayStrings.length; counter++){
+    for(let counter = 0; counter < this.newArrayStrings.length; counter++){
+
+      let currentSymbol = this.newArrayStrings[counter]
+      let nextSymbol = this.newArrayStrings[counter + 1]
   
-      if((Number(newArrayStrings[counter]) &&  Number(newArrayStrings[counter + 1])) || (newArrayStrings[counter + 1] === '0')){
-        newArrayStrings[counter] = newArrayStrings[counter] + newArrayStrings[counter + 1]
-        newArrayStrings[counter + 1] = newArrayStrings[counter + 2]
+      if((Number(currentSymbol) &&  Number(nextSymbol)) || (nextSymbol === '0')){
+        this.newArrayStrings[counter] = currentSymbol + nextSymbol
+        nextSymbol = this.newArrayStrings[counter + 2]
       }
     }
   }
@@ -119,11 +120,10 @@ class CalculatorComponent extends React.Component {
       }
     }
   
-
     let resultDisplay 
 
     if(result !== null){
-      resultDisplay = arrayNumberAndSigns.join("").concat(result)
+      resultDisplay = this.arrayNumberAndSigns.join("").concat(result)
     }
 
     this.setState({
@@ -133,9 +133,7 @@ class CalculatorComponent extends React.Component {
     return result
   }
   
-
   render() {
-
     const {displayNumClicked, displayNumAndOperations} = this.state
 
     const items = numbersAndSymbols.map((element, index) => {
@@ -143,7 +141,6 @@ class CalculatorComponent extends React.Component {
     });
 
     return (
-
     <div className="body-container">
       <div className="calculator-container">
         <div className="display-operation">{displayNumAndOperations}</div>
@@ -151,9 +148,8 @@ class CalculatorComponent extends React.Component {
         <div className="num-container">{items}</div>
       </div>
     </div>
-
     );
   }
 }
 
-export default CalculatorComponent;
+export default Calculator;
