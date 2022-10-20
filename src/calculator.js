@@ -23,6 +23,7 @@ class Calculator extends React.Component {
       case 'AC':
         textDisplay = ''
         this.arrayNumber = []
+        this.arrayNumberAndSigns = []
         break;
       case Number(buttonClicked):
         let numClicked = Number(buttonClicked)
@@ -70,13 +71,13 @@ class Calculator extends React.Component {
     this.newArrayStrings = [...arrayNumberAndSigns]
 
     for(let counter = 0; counter < this.newArrayStrings.length; counter++){
+      let currentSymbol = this.newArrayStrings[counter] // 1
+      let nextSymbol = this.newArrayStrings[counter + 1] // 0
 
-      let currentSymbol = this.newArrayStrings[counter]
-      let nextSymbol = this.newArrayStrings[counter + 1]
-  
+      
       if((Number(currentSymbol) &&  Number(nextSymbol)) || (nextSymbol === '0')){
         this.newArrayStrings[counter] = currentSymbol + nextSymbol
-        nextSymbol = this.newArrayStrings[counter + 2]
+        this.newArrayStrings[counter + 1] = this.newArrayStrings[counter + 2]
       }
     }
   }
