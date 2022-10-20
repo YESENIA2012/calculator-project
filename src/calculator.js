@@ -9,7 +9,7 @@ class Calculator extends React.Component {
       displayNumAndOperations: ""
     }
     this.handleElementsClick = this.handleElementsClick.bind(this)
-    this.arrayNumberAndSigns = [] //este se puede usar en vez del otro, revisar 
+    this.arrayNumberAndSigns = [] 
     this.arrayNumber = []
     this.newArrayStrings = []
   }
