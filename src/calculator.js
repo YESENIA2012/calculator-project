@@ -35,6 +35,8 @@ class Calculator extends React.Component {
         textDisplay = this.makeOperation(this.newArrayStrings);
         this.arrayNumber = [];
         this.arrayNumberAndSigns = [];
+        this.arrayNumber[0] = this.makeOperation(this.newArrayStrings);
+        this.arrayNumberAndSigns[0] = this.makeOperation(this.newArrayStrings);
         break;
       default:
         textDisplay = buttonClicked;
@@ -132,7 +134,6 @@ class Calculator extends React.Component {
     this.setState({
       displayNumAndOperations: resultDisplay,
     });
-
     return result;
   }
 
